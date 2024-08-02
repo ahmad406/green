@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Advice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+        .header {
+            /* text-align: center; */
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .amount-words {
+            margin-top: 20px;
+        }
+        .signature {
+            margin-top: 40px;
+        }
+        .signature-container {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .signature-line {
+            border-bottom: 2px solid black;
+            width: 60%;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <p><strong>To,<br>The Branch Manager<br>AXIS BANK</p>
+                <p><strong>Dated: {%= getTodayDate() %}</strong></p>
+            <p style="margin: 0;"> Marredpally, Secunderabad- 500026</strong></p>
+           
+        </div>
+        <div class="content">
+            <p>Dear Sir,</p> <br>
+            <p style="line-height: 1.3;margin-bottom: 5px;"><strong>Sub: Payment Advice from  {%= filters.company %}
+                <br>A/C # {%= getAccountNo(filters.company) %} for period  {%= formatDate(filters.from_date) %} to {%= formatDate(filters.to_date) %}<br>Ple+A16:G56ke the payroll transfer from above account number to the below mentioned Account numbers towards Employee </strong></p>
+            <center style="margin: 0;"><strong> Salaries Cheque No: ___________________ Dated :  {%= getTodayDate() %}</strong></center>
+        </div>
+        <table>
+            <tr>
+                <th style="background-color: transparent !important;">S.No</th>
+                <th style="background-color: transparent !important;">Employee ID</th>
+                <th style="background-color: transparent !important;">Employee Name</th>
+                <th style="background-color: transparent !important;">BANK NAME</th>
+                <th style="background-color: transparent !important;">ACCOUNT NO</th>
+                <th style="background-color: transparent !important;">IFSC CODE</th>
+<!--                 <th style="width: 120px;background-color: transparent !important;">Gross PAY</th> -->
+                <th style="width: 120px;background-color: transparent !important;">NET PAY</th>
+            </tr>
+            {% total_net=0 %}  
+            {% total_gross=0 %}  
+
+            {% for(var j= 0; j < data.length; j++) { %}
+            <tr>
+                <td>{%= j+1 %}</td>
+                <td>{%= data[j]["employee"] %}</td>
+                <td>{%= data[j]["employee_name"] %}</td>
+                <td>{%= data[j]["bank_name"] %}</td>
+                <td>{%= data[j]["bank_account_no"] %}</td>
+                <td>{%= data[j]["custom_ifsc_code"] %}</td>
+               
+<!--                 <td> {%= format_currency(data[j]["gross_pay"],filters.currency  || "INR") %} </td> -->
+                <td> {%= format_currency(data[j]["net_pay"],filters.currency  || "INR") %}</td>
+                {% total_net +=data[j]["net_pay"] %} 
+                {% total_gross +=data[j]["gross_pay"] %} 
+            </tr>
+            {% } %} 
+            <tr class="total-row">
+                <td colspan="6">Total</td>
+<!--                 <td> {%= format_currency(total_gross, filters.currency  || "INR") %}</td> -->
+                <td> {%= format_currency(total_net,filters.currency  || "INR") %}</td>
+            </tr>
+<tr>
+ <td colspan="100" id="money-in-words">Amount in Words: {%= moneyInWords(total_net) %} </td>
+
+ 
+
+
+</tr>
+
+        </table>
+
+              
+        <div class="signature-container">
+            <p> <strong>For {%= filters.company %}</strong></p>
+            <br><br>
+            <span>Authorised Signature</span>
+            <div class="signature-line"></div>
+        </div>
+    </div>
+</body>
+</html>
+
